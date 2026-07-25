@@ -1,0 +1,12 @@
+{
+  "name": "The Progress Club",
+  "short_name": "The Club",
+  "start_url": "/club",
+  "display": "standalone",
+  "background_color": "#141E1A",
+  "theme_color": "#DE7A52",
+  "icons": [
+    { "src": "/club-favicon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/club-favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
