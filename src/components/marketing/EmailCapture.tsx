@@ -29,7 +29,7 @@ export function EmailCapture({ source, dark = false }: { source: string; dark?: 
     return (
       <div
         className={`flex items-center justify-center gap-3 rounded-full border px-6 py-4 ${
-          dark ? 'border-gold/40 bg-gold/10' : 'border-gold/50 bg-gold/10'
+          dark ? 'border-gold/45 bg-gold/15 backdrop-blur-md' : 'border-gold/50 bg-gold/10'
         }`}
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold">
@@ -43,7 +43,7 @@ export function EmailCapture({ source, dark = false }: { source: string; dark?: 
     <form action={action} className="w-full">
       <div
         className={`flex items-center gap-2 rounded-full border p-1.5 pl-5 ${
-          dark ? 'border-night-line bg-night-card' : 'border-line bg-card'
+          dark ? 'border-white/20 bg-white/10 backdrop-blur-md' : 'border-line bg-card'
         }`}
       >
         <input

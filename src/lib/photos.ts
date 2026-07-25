@@ -21,6 +21,8 @@ export type PhotoManifest = Record<string, string | null>;
 export type ReelSlot = { slot: string; src: string | null; poster: string | null };
 
 export const PHOTO_SLOTS = [
+  'hero-bg',
+  'hero-cut',
   'hero-main',
   'about-01', 'about-02', 'about-03',
   'club-01', 'club-02', 'club-03', 'club-04',

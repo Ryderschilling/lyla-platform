@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import type { PhotoManifest, ReelSlot } from '@/lib/photos';
 import { PhotoSlot } from '../ui/PhotoSlot';
-import { EASE, MaskRise, Magnetic, Reveal } from '../ui/motion';
-import { EmailCapture } from './EmailCapture';
+import { Magnetic, Reveal } from '../ui/motion';
+import { HeroStage } from './HeroStage';
 import { Marquee } from './Marquee';
 import { ReelTile } from './ReelTile';
 
@@ -55,88 +54,8 @@ export function HomeClient({ photos, reels }: { photos: PhotoManifest; reels: Re
   return (
     <>
       {/* ============ HERO ============ */}
-      <section className="relative overflow-hidden pt-28 md:pt-36">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 md:px-10 md:pb-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE }}
-              className="eyebrow text-sea"
-            >
-              Nutrition + strength coach · Santa Rosa Beach, FL
-            </motion.p>
-            <MaskRise
-              className="mt-5 font-display text-[clamp(44px,7.4vw,84px)] font-normal leading-[0.98] tracking-tight text-ink"
-              lines={[
-                <span key="1">Chase progress,</span>,
-                <em key="2" className="italic text-coral">
-                  not perfection.
-                </em>,
-              ]}
-            />
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.5, ease: EASE }}
-              className="mt-6 max-w-md text-[15px] leading-relaxed text-ink2 md:text-base"
-            >
-              A new workout every sunrise, coaching in your pocket, and a club that notices when you show up.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.62, ease: EASE }}
-              className="mt-8 flex flex-wrap items-center gap-5"
-            >
-              <Magnetic>
-                <Link
-                  href="/the-club"
-                  className="inline-block rounded-full bg-coral px-7 py-3.5 font-mono text-[11px] tracking-[0.14em] text-card shadow-[0_14px_30px_-12px_rgba(222,122,82,0.55)] transition-colors duration-300 hover:bg-corald"
-                >
-                  JOIN THE PROGRESS CLUB
-                </Link>
-              </Magnetic>
-              <Link
-                href="/the-club"
-                className="border-b border-line pb-1 font-mono text-[11px] tracking-[0.12em] text-ink transition-colors duration-300 hover:border-coral hover:text-coral"
-              >
-                See how the Club works →
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.74, ease: EASE }}
-              className="mt-10 max-w-md"
-            >
-              <EmailCapture source="home-hero" />
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.35, ease: EASE }}
-            className="relative mx-auto w-full max-w-[420px] lg:max-w-none"
-          >
-            <PhotoSlot
-              src={photos['hero-main']}
-              slot="hero-main"
-              aspect="4/5"
-              frame="arch"
-              duotone={!!photos['hero-main']}
-              alt="Lyla Schilling training at golden hour"
-              className="w-full"
-            >
-              <span className="absolute inset-x-0 bottom-5 px-6 text-center font-mono text-[9px] uppercase tracking-[0.24em] text-shell/90">
-                Built on 30A · Sweat, pray, repeat
-              </span>
-            </PhotoSlot>
-          </motion.div>
-        </div>
-        <Marquee />
-      </section>
+      <HeroStage bg={photos['hero-bg']} cut={photos['hero-cut']} />
+      <Marquee />
 
       {/* ============ REELS PEEK ============ */}
       <section className="mx-auto max-w-6xl px-5 py-20 md:px-10 md:py-28">

@@ -28,6 +28,9 @@ export function Nav() {
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);
+
+  /** Home's hero is a full-bleed dark photo — the nav goes light until you scroll off it. */
+  const overHero = pathname === '/' && !scrolled;
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => {
@@ -37,13 +40,35 @@ export function Nav() {
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ${
-          scrolled ? 'border-line2 bg-[rgba(247,241,230,0.86)] backdrop-blur-xl' : 'border-transparent bg-transparent'
-        }`}
-      >
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-5 px-5 md:px-10">
-          <Link href="/" className="flex items-center gap-2.5 font-display text-[15px] tracking-tight text-ink">
+      {/*
+        Floating nav. The bar NEVER changes size or position — animating width /
+        left / height is what makes these stutter, because every frame forces a
+        layout pass. Instead the geometry is fixed and only two compositor-safe
+        properties move: a translateY on the rail, and the opacity of a pill
+        that is painted underneath the content and always occupies the same box.
+        Nothing reflows, so it stays smooth even mid-scroll.
+      */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+        <div
+          className={`mx-auto max-w-6xl transition-transform duration-[600ms] ease-brand will-change-transform ${
+            scrolled ? 'translate-y-3 md:translate-y-4' : 'translate-y-0'
+          }`}
+        >
+          <div className="relative">
+            {/* the glass pill — fades in, never moves */}
+            <div
+              aria-hidden
+              className={`absolute inset-0 rounded-full border border-line2 bg-[rgba(247,241,230,0.82)] shadow-[0_22px_50px_-26px_rgba(35,48,41,0.55)] backdrop-blur-xl transition-opacity duration-[600ms] ease-brand ${
+                scrolled ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+            <div className="pointer-events-auto relative flex h-16 items-center gap-5 px-5 md:px-10">
+          <Link
+            href="/"
+            className={`flex items-center gap-2.5 font-display text-[15px] tracking-tight transition-colors duration-500 ${
+              overHero ? 'text-night-text' : 'text-ink'
+            }`}
+          >
             <SunMark className="h-5 w-5 text-coral" />
             Lyla Schilling
           </Link>
@@ -54,7 +79,11 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 className={`font-mono text-[10px] tracking-[0.18em] transition-colors duration-300 ${
-                  pathname === l.href ? 'text-coral' : 'text-ink2 hover:text-coral'
+                  pathname === l.href
+                    ? 'text-coral'
+                    : overHero
+                      ? 'text-night-sub hover:text-coral'
+                      : 'text-ink2 hover:text-coral'
                 }`}
               >
                 {l.label}
@@ -65,13 +94,17 @@ export function Nav() {
           <div className="ml-auto flex items-center gap-2.5 lg:ml-6">
             <Link
               href="/login"
-              className="hidden rounded-full border border-line px-4 py-2 font-mono text-[10px] tracking-[0.16em] text-ink transition-colors duration-300 hover:border-coral hover:text-coral sm:block"
+              className={`hidden rounded-full border px-4 py-2 font-mono text-[10px] tracking-[0.16em] transition-colors duration-500 hover:border-coral hover:text-coral sm:block ${
+                overHero ? 'border-night-line text-night-text' : 'border-line text-ink'
+              }`}
             >
               LOG IN
             </Link>
             <Link
               href="/the-club"
-              className="rounded-full bg-ink px-4 py-2.5 font-mono text-[10px] tracking-[0.16em] text-shell transition-colors duration-300 hover:bg-coral"
+              className={`rounded-full px-4 py-2.5 font-mono text-[10px] tracking-[0.16em] transition-colors duration-500 ${
+                overHero ? 'bg-coral text-night-bg hover:bg-corald' : 'bg-ink text-shell hover:bg-coral'
+              }`}
             >
               JOIN THE CLUB
             </Link>
@@ -80,9 +113,19 @@ export function Nav() {
               onClick={() => setOpen((v) => !v)}
               className="relative flex h-10 w-10 items-center justify-center lg:hidden"
             >
-              <span className={`absolute h-px w-5 bg-ink transition-all duration-300 ${open ? 'rotate-45' : '-translate-y-[3.5px]'}`} />
-              <span className={`absolute h-px w-5 bg-ink transition-all duration-300 ${open ? '-rotate-45' : 'translate-y-[3.5px]'}`} />
+              <span
+                className={`absolute h-px w-5 transition-all duration-300 ${overHero && !open ? 'bg-night-text' : 'bg-ink'} ${
+                  open ? 'rotate-45' : '-translate-y-[3.5px]'
+                }`}
+              />
+              <span
+                className={`absolute h-px w-5 transition-all duration-300 ${overHero && !open ? 'bg-night-text' : 'bg-ink'} ${
+                  open ? '-rotate-45' : 'translate-y-[3.5px]'
+                }`}
+              />
             </button>
+          </div>
+            </div>
           </div>
         </div>
       </header>
