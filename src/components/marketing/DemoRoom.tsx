@@ -48,7 +48,7 @@ export function DemoRoom() {
         <span className="h-7 w-7 rounded-full border border-night-line bg-gradient-to-br from-coral to-gold" />
       </div>
 
-      <div className="grid lg:grid-cols-[170px_1fr_260px]">
+      <div className="grid lg:grid-cols-[168px_minmax(0,1fr)_300px]">
         {/* rail */}
         <nav className="flex gap-1 overflow-x-auto border-b border-night-line p-3 lg:flex-col lg:border-b-0 lg:border-r lg:p-3.5" aria-label="Demo navigation">
           {["TODAY'S WOD", 'PAST WORKOUTS', 'MY PROGRESS', 'MESSAGE LYLA', 'LEAVE A REVIEW'].map((item, i) => (
@@ -93,7 +93,7 @@ export function DemoRoom() {
         </div>
 
         {/* side rail */}
-        <aside className="flex flex-col border-t border-night-line lg:border-l lg:border-t-0">
+        <aside className="flex min-w-0 flex-col border-t border-night-line lg:border-l lg:border-t-0">
           <Timer emomDefault={DEMO_WORKOUT.timer.emom} />
           <ChatShell
             header="ASK COACH — KNOWS TODAY'S WOD"

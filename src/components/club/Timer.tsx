@@ -160,22 +160,39 @@ export function Timer({ emomDefault }: { emomDefault?: EmomCfg | null }) {
       : 'Switch to stopwatch';
 
   return (
-    <div className="border-b border-night-line px-5 py-7 text-center md:px-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-night-sub">
-        {mode === 'sw' ? 'STOPWATCH' : `EMOM · ${rounds} ROUNDS`}
-      </p>
+    // container-type lets the digits size off THIS rail instead of the viewport.
+    // 6.4vw read right in the 420px member rail and overflowed the narrow demo
+    // rail on The Club page, which is what clipped the clock.
+    <div className="min-w-0 border-b border-night-line px-4 py-6 text-center [container-type:inline-size] md:px-6 md:py-7">
+      <div className="flex items-center justify-center gap-3">
+        <p className="min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.24em] text-night-sub">
+          {mode === 'sw' ? 'STOPWATCH' : `EMOM · ${rounds} ROUNDS`}
+        </p>
+        <button
+          type="button"
+          onClick={toggleSound}
+          aria-pressed={!muted}
+          aria-label={muted ? 'Turn timer sound on' : 'Turn timer sound off'}
+          title={muted ? 'Sound off' : 'Sound on'}
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 ${
+            muted ? 'border-night-line text-night-sub hover:text-night-text' : 'border-gold/45 text-gold'
+          }`}
+        >
+          <SpeakerGlyph muted={muted} className="h-3.5 w-3.5" />
+        </button>
+      </div>
       <p
-        className={`tab-nums mt-3 font-mono text-[clamp(54px,6.4vw,80px)] leading-[0.95] tracking-[0.02em] transition-colors duration-300 ${
+        className={`tab-nums mt-3 font-mono text-[clamp(40px,25cqw,76px)] leading-[0.95] tracking-[0.02em] transition-colors duration-300 ${
           golden ? 'text-gold' : 'text-night-text'
         }`}
       >
         {digits}
       </p>
-      <p className="mt-2 h-4 font-mono text-[10px] tracking-[0.2em] text-gold">
+      <p className="mt-2 h-4 truncate font-mono text-[10px] tracking-[0.2em] text-gold">
         {mode === 'emom' && (emomDone ? 'EMOM COMPLETE' : running || acc > 0 ? `ROUND ${roundIdx + 1}/${rounds}${emomDefault?.label ? ` — ${emomDefault.label}` : ''}` : '')}
       </p>
       {mode === 'emom' && (
-        <div className="mb-4 mt-3.5 flex items-center justify-center gap-2">
+        <div className="mb-4 mt-3.5 flex flex-wrap items-center justify-center gap-2">
           {Array.from({ length: dotCount }).map((_, i) => {
             const done = emomDone || i < roundIdx;
             return (
@@ -190,11 +207,13 @@ export function Timer({ emomDefault }: { emomDefault?: EmomCfg | null }) {
           {rounds > 12 && <span className="pl-1 font-mono text-[10px] text-night-sub">+{rounds - 12}</span>}
         </div>
       )}
-      <div className="mt-4 flex items-center justify-center gap-2.5">
+      {/* the mute toggle moved up beside the mode label, because three pills in
+          one row overflowed a narrow rail and clipped the speaker */}
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
         <button
           type="button"
           onClick={start}
-          className="rounded-full bg-coral px-8 py-3.5 font-mono text-[11.5px] tracking-[0.18em] text-night-bg transition-all duration-300 hover:brightness-110"
+          className="rounded-full bg-coral px-7 py-3.5 font-mono text-[11.5px] tracking-[0.18em] text-night-bg transition-all duration-300 hover:brightness-110"
         >
           {running ? 'PAUSE' : 'START'}
         </button>
@@ -204,18 +223,6 @@ export function Timer({ emomDefault }: { emomDefault?: EmomCfg | null }) {
           className="rounded-full border border-night-line px-5 py-3.5 font-mono text-[11.5px] tracking-[0.18em] text-night-sub transition-colors duration-300 hover:text-night-text"
         >
           RESET
-        </button>
-        <button
-          type="button"
-          onClick={toggleSound}
-          aria-pressed={!muted}
-          aria-label={muted ? 'Turn timer sound on' : 'Turn timer sound off'}
-          title={muted ? 'Sound off' : 'Sound on'}
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-300 ${
-            muted ? 'border-night-line text-night-sub hover:text-night-text' : 'border-gold/45 text-gold'
-          }`}
-        >
-          <SpeakerGlyph muted={muted} className="h-4 w-4" />
         </button>
       </div>
       {/* ONE toggle that names where it takes you. The old pair of segmented
@@ -229,14 +236,14 @@ export function Timer({ emomDefault }: { emomDefault?: EmomCfg | null }) {
           onClick={() => switchMode(mode === 'sw' ? 'emom' : 'sw')}
           title={other}
           aria-label={other}
-          className="flex items-center gap-2 rounded-full border border-night-line px-4 py-2.5 font-mono text-[9px] tracking-[0.14em] text-night-sub transition-colors duration-300 hover:border-coral/50 hover:text-coral"
+          className="flex max-w-full items-center gap-2 rounded-full border border-night-line px-4 py-2.5 font-mono text-[9px] tracking-[0.14em] text-night-sub transition-colors duration-300 hover:border-coral/50 hover:text-coral"
         >
-          <SwapGlyph className="h-3 w-3" />
-          {other.toUpperCase()}
+          <SwapGlyph className="h-3 w-3 shrink-0" />
+          <span className="truncate">{other.toUpperCase()}</span>
         </button>
       </div>
       {mode === 'emom' && !running && acc === 0 && (
-        <div className="mt-4 flex items-center justify-center gap-5 font-mono text-[10px] tracking-[0.12em] text-night-sub">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2.5 font-mono text-[10px] tracking-[0.12em] text-night-sub">
           <span className="flex items-center gap-2">
             RDS
             <button type="button" onClick={() => setRounds((r) => Math.max(1, r - 1))} className="h-6 w-6 rounded-full border border-night-line leading-none hover:text-night-text" aria-label="Fewer rounds">−</button>
